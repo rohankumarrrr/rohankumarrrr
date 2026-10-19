@@ -50,3 +50,15 @@ All three are SIL Open Font License 1.1. Each license is next to its font in `fo
 - Silkscreen: tiny pixel labels. It stands in for FL's proprietary microfont.
 
 The generator subsets each font to the characters in use and renames the subset to its CSS alias, so no Reserved Font Name ships with a modified font.
+
+## Last listened line
+
+`last_listened.py` writes the latest last.fm track into `README.md`, between the `last-listened` comment markers. It uses the same source as the widget on rohan-is.me (`user.getrecenttracks` for `imaduck2025`). `.github/workflows/last-listened.yml` runs it every 15 minutes and commits only when the line changes. GitHub may start scheduled runs late.
+
+It needs a repository secret named `LASTFM_API_KEY`:
+
+```sh
+gh secret set LASTFM_API_KEY --repo rohankumarrrr/rohankumarrrr
+```
+
+To run it by hand: `LASTFM_API_KEY=… python3 scripts/last_listened.py`. Keep the two markers on their own lines. A line that starts with an HTML comment renders as raw HTML, which breaks the track link.
