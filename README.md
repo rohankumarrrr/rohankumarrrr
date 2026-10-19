@@ -8,7 +8,7 @@ building [vinskal](https://vinskal.com), a job search platform that finds the ro
 
 before this: pinterest's first-party agentic harness for autonomous vulnerability discovery and validation, and the personalization layer behind multilingual music recommendations for amazon music and alexa.
 
-statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
+statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo). i also write sometimes: [rohan-is.me](https://www.rohan-is.me).
 
 <br>
 
