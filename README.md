@@ -1,16 +1,35 @@
-## Hi there 👋
+<p align="center">
+  <a href="https://www.rohan-is.me">
+    <img src="assets/channel-rack.svg" width="860" alt="FL Studio channel rack for [rohankumar] rohan-is.me, playing at 140 BPM. Channels: rohan...Master, building vinskal, cs+stats@uiuc, pinterest, prev@amazon, uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.">
+  </a>
+</p>
 
-<!--
-**rohankumarrrr/rohankumarrrr** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+building [vinskal](https://vinskal.com), a job search platform that finds the roles, tailors each application, and applies once you've signed off. i work on the discovery pipeline behind 500k+ live postings and the browser agent that does the applying.
 
-Here are some ideas to get you started:
+before this: pinterest's first-party agentic harness for autonomous vulnerability discovery and validation, and the personalization layer behind multilingual music recommendations for amazon music and alexa.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
+
+<br>
+
+```
+rohan@vinskal ~ % vinskal track --me
+
+ ROLE                             STATUS    SINCE
+ founding engineer, vinskal       active    AUG 2026
+ swe intern, pinterest appsec     done      MAY 2026
+ sde intern, amazon music         done      FEB 2026
+ swe intern, relativity           done      MAY 2025
+ swe intern, am best              done      JUN 2024
+ research assistant, uiuc hci     done      JAN 2024
+ b.s. statistics + cs, uiuc       senior    AUG 2023
+```
+
+<samp>
+  <a href="https://www.rohan-is.me">personal website</a> ·
+  <a href="https://vinskal.com">vinskal</a> ·
+  <a href="https://www.rohan-is.me/ROHAN_KUMAR.pdf">resume</a> ·
+  <a href="https://linkedin.com/in/rohankumarrr313">linkedin</a> ·
+  <a href="https://x.com/rohankumarrr313">x</a> ·
+  <a href="mailto:rohankumarrr313@gmail.com">email</a>
+</samp>
