@@ -1,6 +1,6 @@
 # Profile header generator
 
-`channel_rack.py` draws `assets/channel-rack.svg`, the FL Studio channel rack at the top of the profile README.
+`channel_rack.py` draws `assets/channel-rack-<hash>.svg`, the FL Studio channel rack at the top of the profile README.
 It writes one self-contained SVG: no JavaScript, fonts embedded as base64 subsets, and animation in SMIL and
 CSS keyframes, which GitHub still plays inside an `<img>`.
 
@@ -12,7 +12,7 @@ python3 -m venv .venv
 .venv/bin/python scripts/channel_rack.py
 ```
 
-Then commit `assets/channel-rack.svg`. GitHub's image cache can take a few minutes to show the new version.
+The script writes `assets/channel-rack-<hash>.svg`, named by a hash of its contents, deletes the previous file, and points `README.md` at the new name. Commit `assets/` and `README.md` together. Each version gets a new URL, so it shows up right away instead of waiting out GitHub's 5-minute image cache.
 
 ## What to edit
 
@@ -34,15 +34,15 @@ A channel name should stay under about 74px at 13px PT Sans Narrow, which is rou
 
 ## How it animates
 
-It follows FL Studio's playback, with one deliberate change. Everything runs on a single 8th-note clock, 24 ticks per loop (about every 0.21s at 140 BPM), so every moving part changes on the same beat. FL itself animates smoothly.
+It follows FL Studio's playback, with one deliberate change. Everything runs on a single shared clock, so every moving part changes on the same tick. It's set to 16th notes: 48 ticks per loop, about every 0.107s at 140 BPM. Change `STEPS_PER_TICK` to 2 for 8ths or 4 for quarter notes. FL itself animates smoothly.
 
 - Step rows have no playhead.
-- Piano-roll rows show a thin pink line with a soft trail. It jumps one 8th note per tick.
-- Each channel's selector strip fills grey while the channel sounds, then drops off over the next tick or two.
+- Piano-roll rows show a thin pink line with a soft trail. It jumps one tick at a time.
+- Each channel's selector strip fills grey while the channel sounds, then drops off over the next few ticks.
 - The M:S:CS clock steps with the clock and restarts with the pattern, as FL does in pattern mode.
 - The scope and level meter change frame on each tick. The meter shows how much of the rack is playing.
 
-The clock, scope and meter are drawn as "film strips": one frame per tick, slid up by a shared `.strip` animation with `steps(24)`. To change the grid, change `TICKS`.
+The clock, scope and meter are drawn as "film strips": one frame per tick, slid up by a shared `.strip` animation with `steps(TICKS)`.
 
 ## Fonts
 

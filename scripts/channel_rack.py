@@ -1,30 +1,35 @@
 """Option: rohan-is.me as an FL Studio channel rack, in Rohan's own theme (light UI, hot-pink accents).
 
 Colours are sampled from Rohan's screenshots; geometry is the 2x capture at half size (native 1x).
-Animation follows a screen recording of FL playing, but everything runs on one shared 8th-note clock
-(24 ticks per loop) for a deliberately choppy, cohesive look; FL itself animates smoothly:
+Animation follows a screen recording of FL playing, but everything runs on one shared clock
+(STEPS_PER_TICK; 16th notes, 48 ticks per loop) for a deliberately choppy, cohesive look; FL itself animates smoothly:
   - step rows have no playhead;
-  - piano-roll rows show a thin pink line with a soft pink trail on its left, jumping one 8th note per tick;
+  - piano-roll rows show a thin pink line with a soft pink trail on its left, jumping one tick at a time;
   - each channel's selector strip fills grey while the channel sounds and drops off over the next ticks;
   - the M:S:CS clock, scope and level meter change frame on each tick.
 Fonts: PT Sans Narrow (UI text) and Roboto Condensed Light (clock, tempo, pattern), both bundled with FL
 and OFL-licensed; Silkscreen stands in for FL's proprietary pixel microfont.
 """
+import hashlib
 import random
+import re
 from pathlib import Path
 
 from fontkit import face
 from svgkit import esc, svg, write
 
-OUT = Path(__file__).resolve().parent.parent / "assets" / "channel-rack.svg"
+ROOT = Path(__file__).resolve().parent.parent
+ASSETS, README = ROOT / "assets", ROOT / "README.md"
 
 W, H = 860, 444
 BPM = 140
 STEP = 60 / BPM / 4            # one 16th note, seconds
 LOOP_STEPS = 48                # three bars, longer than the 41 visible steps, like a real pattern
 LOOP = STEP * LOOP_STEPS
-TICKS = LOOP_STEPS // 2        # one shared clock: every animation changes on the 8th-note grid
-TICK = LOOP / TICKS            # ~0.214 s at 140 BPM
+STEPS_PER_TICK = 1             # the shared clock: 1 = 16th notes, 2 = 8ths, 4 = quarter notes
+TICKS = LOOP_STEPS // STEPS_PER_TICK   # every animation changes on this grid
+TICK = LOOP / TICKS            # ~0.107 s at 140 BPM with 16ths
+DECAY = 0.63 ** STEPS_PER_TICK # selector fall-off per tick (~0.4 s to silence)
 STRIP = 40                     # pitch of the stepped "film strips" (taller than any window they show through)
 
 # ── palette (sampled) ──
@@ -74,12 +79,12 @@ def channel_notes(content):
 
 
 def levels(notes):
-    """Selector level for each 8th note: full while the channel sounds in it, then a short decay."""
+    """Selector level for each tick: full while the channel sounds in it, then a short decay."""
     vals, prev = [], 0.0
     for w in range(2 * TICKS):                          # two passes so tails wrap round the loop
-        a = (w % TICKS) * 2
-        hit = [pk for s, ln, pk in notes if s < a + 2 and s + ln > a]
-        prev = max(hit) if hit else (prev * 0.4 if prev * 0.4 >= 0.12 else 0.0)
+        a = (w % TICKS) * STEPS_PER_TICK
+        hit = [pk for s, ln, pk in notes if s < a + STEPS_PER_TICK and s + ln > a]
+        prev = max(hit) if hit else (prev * DECAY if prev * DECAY >= 0.12 else 0.0)
         vals.append(prev)
     return vals[TICKS:]
 
@@ -141,14 +146,14 @@ out.append(f'<rect x="196" y="6" width="62" height="24" rx="4" fill="#ffffff" st
 out.append(tool(266, 6, inner='<path d="M-6 6L0 -7L6 6Z M0 3L5 -5" fill="none" stroke="#3d3d3d" stroke-width="1.6" stroke-linejoin="round"/>'))
 out.append(tool(294, 6, pink=True, inner=t(0, 4.5, "3.2", 12, "#5a0030", "middle", extra=' font-style="italic"')))
 out.append(tool(322, 6, pink=True, inner='<path d="M-7 -5h14v10h-14z M-3 -5v6 M1 -5v6 M5 -2h4M7 -4v4" fill="none" stroke="#5a0030" stroke-width="1.6"/>'))
-# Everything below that moves is a "film strip": one frame per 8th note stacked STRIP px apart,
+# Everything below that moves is a "film strip": one frame per tick stacked STRIP px apart,
 # slid up one frame per tick by the shared .strip animation, so it all changes together.
 def strip(frames, clip_id):
     body = "".join(f'<g transform="translate(0 {k * STRIP})">{f}</g>' for k, f in enumerate(frames))
     return f'<g clip-path="url(#{clip_id})"><g class="strip">{body}</g></g>'
 
 
-# song position, M:S:CS: steps with the 8th-note clock and restarts with the pattern, as FL does in pattern mode
+# song position, M:S:CS: steps with the shared clock and restarts with the pattern, as FL does in pattern mode
 out.append(f'<rect x="354" y="4" width="102" height="28" rx="3" fill="#ffffff" stroke="{BTN_EDGE}"/>' + t(451, 11, "M:S:CS", 4.5, "#5a4652", "end", MICRO))
 TY = 28
 xs = {"m": 366, "c1": 375, "s1": 384, "s2": 397, "c2": 407, "cs1": 418, "cs2": 429}
@@ -163,7 +168,7 @@ def clock(k):
             + t(xs["cs2"], TY, str(c % 10), 18, ICON, "middle", LIGHT))
 out.append(strip([clock(k) for k in range(TICKS)], "tclip"))
 
-# scope + level meter: a new frame every 8th note, sized by how much of the rack is playing
+# scope + level meter: a new frame every tick, sized by how much of the rack is playing
 out.append(f'<rect x="462" y="4" width="112" height="28" rx="3" fill="#ffffff" stroke="{BTN_EDGE}"/>')
 out.append('<clipPath id="scopeclip"><rect x="463" y="5" width="110" height="26"/></clipPath>')
 def scope_frame(k):
@@ -273,14 +278,14 @@ for r, (name, kind, mixer, content) in enumerate(channels):
                 grid.extend(bar(s, ln, p) for p in ps)
         elif ctype == "pad":
             grid.append(f'<rect x="{SX0 - 2}" y="{ny(content[1]):.1f}" width="{W - SX0}" height="4" fill="{NOTE}"/>')
-    # selector level, held for each 8th note (step-end) so it changes on the shared tick
+    # selector level, held for each tick (step-end) so it changes on the shared tick
     frames = " ".join(f"{k / TICKS * 100:.4f}% {{ opacity: {lv:.2f} }}" for k, lv in enumerate(LEVELS[r]))
     css.append(f"@keyframes act{r} {{ {frames} 100% {{ opacity: {LEVELS[r][0]:.2f} }} }}"
                f" .act{r} {{ animation: act{r} {LOOP:.4f}s step-end infinite }}")
 
 out.append(f'<g clip-path="url(#grid)">{"".join(grid)}</g>')
 
-# playhead: piano-roll rows only, a thin line with a pink trail behind it, ticking every 8th note (2 steps)
+# playhead: piano-roll rows only, a thin line with a pink trail behind it, moving one tick at a time
 out.append('<clipPath id="rolls">' + "".join(f'<rect x="{SX0 - 2}" y="{y}" width="{W - SX0}" height="{PITCH_Y - 2}"/>' for y in roll_rows) + "</clipPath>")
 out.append(f'<g clip-path="url(#rolls)"><g class="ph"><rect x="{SX0 - 2 - 18}" y="{ROW0}" width="18" height="{len(channels) * PITCH_Y}" fill="url(#trail)"/>'
            f'<rect x="{SX0 - 2}" y="{ROW0}" width="1.3" height="{len(channels) * PITCH_Y}" fill="{PH_LINE}"/></g></g>')
@@ -294,6 +299,24 @@ by = ROW0 + len(channels) * PITCH_Y + 6
 out.append(t(W / 2 - 40, by + 12, "+", 17, "#555", "middle", extra=' font-weight="700"'))
 out.append(f'<rect x="{SX0}" y="{H - 10}" width="{W - SX0 - 10}" height="5" rx="2.5" fill="#e6e6e6"/><rect x="{SX0}" y="{H - 10}" width="300" height="5" rx="2.5" fill="#cfcfcf"/>')
 
-write(OUT, svg(W, H, "".join(out),
+
+def publish(content):
+    """Write the SVG under a content-hashed name and point the README at it.
+
+    GitHub serves README images with a 5-minute cache, so a new filename per version means
+    browsers and the CDN can never show an old copy.
+    """
+    out = ASSETS / f"channel-rack-{hashlib.sha256(content.encode()).hexdigest()[:8]}.svg"
+    for old in ASSETS.glob("channel-rack*.svg"):
+        if old != out:
+            old.unlink()
+    write(out, content)
+    text = README.read_text(encoding="utf-8")
+    updated = re.sub(r"assets/channel-rack[\w-]*\.svg", f"assets/{out.name}", text)
+    if updated != text:
+        README.write_text(updated, encoding="utf-8")
+    print(f"README points at assets/{out.name}")
+
+publish(svg(W, H, "".join(out),
       "FL Studio channel rack, [rohankumar] rohan-is.me at 140 BPM. Channels: rohan...Master, cs+stats@uiuc, building vinskal, pinterest, prev@amazon, prev@uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.",
       family=NARROW, style=fonts + " " + " ".join(css)))
