@@ -46,7 +46,7 @@ N_VIS = 41
 channels = [
     # name, kind, mixer, content
     ("rohan...Master", "master", "---", ("steps", "....xxxx....xxxx")),
-    ("cs+stats@uiuc", "light", "1", ("steps", "x...x...x...x..x")),
+    ("cs+stats@uiuc", "dark", "1", ("steps", "x...x...x...x..x")),
     ("building vinskal", "dark", "---", ("roll", [(0, 3, 6), (4, 2, 8), (8, 3, 5), (12, 2, 9), (16, 3, 6), (20, 2, 8), (24, 4, 3),
                                                    (29, 2, 9), (32, 3, 6), (36, 2, 10), (40, 4, 7), (45, 2, 5)])),
     ("pinterest", "dark", "3", ("chords", [(0, 12, [2, 4, 6, 8]), (16, 12, [1, 3, 5, 9]), (32, 14, [2, 5, 7, 9])])),
