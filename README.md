@@ -10,21 +10,6 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo). i also write sometimes: [rohan-is.me](https://www.rohan-is.me).
 
-<br>
-
-```
-rohan@vinskal ~ % vinskal track --me
-
- ROLE                             STATUS    SINCE
- founding engineer, vinskal       active    AUG 2026
- swe intern, pinterest appsec     done      MAY 2026
- sde intern, amazon music         done      FEB 2026
- swe intern, relativity           done      MAY 2025
- swe intern, am best              done      JUN 2024
- research assistant, uiuc hci     done      JAN 2024
- b.s. statistics + cs, uiuc       senior    AUG 2023
-```
-
 <samp>
   <a href="https://www.rohan-is.me">personal website</a> ·
   <a href="https://vinskal.com">vinskal</a> ·

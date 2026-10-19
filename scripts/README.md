@@ -37,7 +37,7 @@ A channel name should stay under about 74px at 13px PT Sans Narrow, which is rou
 It follows FL Studio's own playback:
 
 - Step rows have no playhead.
-- Piano-roll rows show a thin pink line with a soft trail. FL glides it smoothly; here it jumps one 16th note at a time on purpose, for a choppier look.
+- Piano-roll rows show a thin pink line with a soft trail. FL glides it smoothly; here it ticks once per beat (every quarter note) on purpose, for a choppy look.
 - Each channel's selector strip fills grey while the channel sounds and fades out about 0.28s after note-off.
 - The M:S:CS clock counts up in real time.
 

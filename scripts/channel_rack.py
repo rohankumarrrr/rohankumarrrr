@@ -3,8 +3,8 @@
 Colours are sampled from Rohan's screenshots; geometry is the 2x capture at half size (native 1x).
 Animation follows a screen recording of FL playing:
   - step rows have no playhead;
-  - piano-roll rows show a thin pink line with a soft pink trail on its left (stepped per 16th note here,
-    a deliberate choppier look than FL's smooth glide);
+  - piano-roll rows show a thin pink line with a soft pink trail on its left (here it ticks once per beat,
+    a deliberately choppy look; FL itself glides smoothly);
   - each channel's selector strip fills grey while the channel sounds and fades out after note-off.
 Fonts: PT Sans Narrow (UI text) and Roboto Condensed Light (clock, tempo, pattern), both bundled with FL
 and OFL-licensed; Silkscreen stands in for FL's proprietary pixel microfont.
@@ -268,12 +268,12 @@ for r, (name, kind, mixer, content) in enumerate(channels):
 
 out.append(f'<g clip-path="url(#grid)">{"".join(grid)}</g>')
 
-# playhead: piano-roll rows only, a thin line with a pink trail behind it, jumping one 16th note at a time
+# playhead: piano-roll rows only, a thin line with a pink trail behind it, ticking once per beat (every 4 steps)
 out.append('<clipPath id="rolls">' + "".join(f'<rect x="{SX0 - 2}" y="{y}" width="{W - SX0}" height="{PITCH_Y - 2}"/>' for y in roll_rows) + "</clipPath>")
 out.append(f'<g clip-path="url(#rolls)"><g class="ph"><rect x="{SX0 - 2 - 18}" y="{ROW0}" width="18" height="{len(channels) * PITCH_Y}" fill="url(#trail)"/>'
            f'<rect x="{SX0 - 2}" y="{ROW0}" width="1.3" height="{len(channels) * PITCH_Y}" fill="{PH_LINE}"/></g></g>')
 css.append(f"@keyframes ph {{ from {{ transform: translate(0px, 0px) }} to {{ transform: translate({LOOP_STEPS * SPITCH:.2f}px, 0px) }} }}"
-           f" .ph {{ animation: ph {LOOP:.4f}s steps({LOOP_STEPS}) infinite }}")
+           f" .ph {{ animation: ph {LOOP:.4f}s steps({LOOP_STEPS // 4}) infinite }}")
 
 # add-channel button + scrollbar, as in the real rack
 by = ROW0 + len(channels) * PITCH_Y + 6
