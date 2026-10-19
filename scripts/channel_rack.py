@@ -1,11 +1,12 @@
 """Option: rohan-is.me as an FL Studio channel rack, in Rohan's own theme (light UI, hot-pink accents).
 
 Colours are sampled from Rohan's screenshots; geometry is the 2x capture at half size (native 1x).
-Animation follows a screen recording of FL playing:
+Animation follows a screen recording of FL playing, but everything runs on one shared 8th-note clock
+(24 ticks per loop) for a deliberately choppy, cohesive look; FL itself animates smoothly:
   - step rows have no playhead;
-  - piano-roll rows show a thin pink line with a soft pink trail on its left (here it ticks once per beat,
-    a deliberately choppy look; FL itself glides smoothly);
-  - each channel's selector strip fills grey while the channel sounds and fades out after note-off.
+  - piano-roll rows show a thin pink line with a soft pink trail on its left, jumping one 8th note per tick;
+  - each channel's selector strip fills grey while the channel sounds and drops off over the next ticks;
+  - the M:S:CS clock, scope and level meter change frame on each tick.
 Fonts: PT Sans Narrow (UI text) and Roboto Condensed Light (clock, tempo, pattern), both bundled with FL
 and OFL-licensed; Silkscreen stands in for FL's proprietary pixel microfont.
 """
@@ -22,7 +23,9 @@ BPM = 140
 STEP = 60 / BPM / 4            # one 16th note, seconds
 LOOP_STEPS = 48                # three bars, longer than the 41 visible steps, like a real pattern
 LOOP = STEP * LOOP_STEPS
-REL = 2.6                      # selector release, in steps (~0.28 s, as in the recording)
+TICKS = LOOP_STEPS // 2        # one shared clock: every animation changes on the 8th-note grid
+TICK = LOOP / TICKS            # ~0.214 s at 140 BPM
+STRIP = 40                     # pitch of the stepped "film strips" (taller than any window they show through)
 
 # ── palette (sampled) ──
 WHITE, PANEL_BAR, BAR_LINE = "#ffffff", "#e9e9e9", "#cfcfcf"
@@ -58,6 +61,31 @@ channels = [
                                    (26, 2, 6), (30, 1, 4), (32, 2, 2), (35, 1, 3), (38, 3, 1), (42, 2, 5), (46, 1, 4)])),
     ("rohan-is.me", "master", "7", ("chords", [(s, 2, [2, 4, 6]) for s in (3, 6, 11, 14, 19, 22, 27, 30, 35, 38, 43, 46)])),
 ]
+
+def channel_notes(content):
+    """(start, length, peak) in 16th-note steps for one channel over the loop."""
+    ctype, data = content
+    if ctype == "steps":
+        return [(i, 1, 1.0 if data[i % len(data)] == "x" else 0.55)
+                for i in range(LOOP_STEPS) if data[i % len(data)] in "xp"]
+    if ctype in ("roll", "chords"):
+        return [(n[0], n[1], 1.0) for n in data]
+    return [(0, LOOP_STEPS, 1.0)]                       # pad: held for the whole loop
+
+
+def levels(notes):
+    """Selector level for each 8th note: full while the channel sounds in it, then a short decay."""
+    vals, prev = [], 0.0
+    for w in range(2 * TICKS):                          # two passes so tails wrap round the loop
+        a = (w % TICKS) * 2
+        hit = [pk for s, ln, pk in notes if s < a + 2 and s + ln > a]
+        prev = max(hit) if hit else (prev * 0.4 if prev * 0.4 >= 0.12 else 0.0)
+        vals.append(prev)
+    return vals[TICKS:]
+
+
+LEVELS = [levels(channel_notes(c[3])) for c in channels]
+MIX = [sum(lv[k] for lv in LEVELS) / len(LEVELS) for k in range(TICKS)]   # how much of the rack is playing
 
 NARROW, LIGHT, MICRO = "ptn", "rcl", "mic"
 ui_text = ("".join(c[0] for c in channels) + "0123456789-.:+ All Channel rack Line Today rohan kumar is building "
@@ -113,25 +141,39 @@ out.append(f'<rect x="196" y="6" width="62" height="24" rx="4" fill="#ffffff" st
 out.append(tool(266, 6, inner='<path d="M-6 6L0 -7L6 6Z M0 3L5 -5" fill="none" stroke="#3d3d3d" stroke-width="1.6" stroke-linejoin="round"/>'))
 out.append(tool(294, 6, pink=True, inner=t(0, 4.5, "3.2", 12, "#5a0030", "middle", extra=' font-style="italic"')))
 out.append(tool(322, 6, pink=True, inner='<path d="M-7 -5h14v10h-14z M-3 -5v6 M1 -5v6 M5 -2h4M7 -4v4" fill="none" stroke="#5a0030" stroke-width="1.6"/>'))
-# song position, M:S:CS, really counting
+# Everything below that moves is a "film strip": one frame per 8th note stacked STRIP px apart,
+# slid up one frame per tick by the shared .strip animation, so it all changes together.
+def strip(frames, clip_id):
+    body = "".join(f'<g transform="translate(0 {k * STRIP})">{f}</g>' for k, f in enumerate(frames))
+    return f'<g clip-path="url(#{clip_id})"><g class="strip">{body}</g></g>'
+
+
+# song position, M:S:CS: steps with the 8th-note clock and restarts with the pattern, as FL does in pattern mode
 out.append(f'<rect x="354" y="4" width="102" height="28" rx="3" fill="#ffffff" stroke="{BTN_EDGE}"/>' + t(451, 11, "M:S:CS", 4.5, "#5a4652", "end", MICRO))
 TY = 28
 xs = {"m": 366, "c1": 375, "s1": 384, "s2": 397, "c2": 407, "cs1": 418, "cs2": 429}
-for key, ch in (("m", "0"), ("c1", ":"), ("c2", ":")):
+for key, ch in (("m", "0"), ("c1", ":"), ("s1", "0"), ("c2", ":")):
     out.append(t(xs[key], TY, ch, 26, ICON, "middle", LIGHT))
-out.append('<clipPath id="tclip"><rect x="377" y="7" width="72" height="24"/></clipPath>')
-for key, n, dur, size in (("s1", 6, 60, 26), ("s2", 10, 10, 26), ("cs1", 10, 1, 18), ("cs2", 10, 0.1, 18)):
-    strip = "".join(t(xs[key], TY + i * 30, str(i), size, ICON, "middle", LIGHT) for i in range(n))
-    vals = ";".join(f"0 {-i * 30}" for i in range(n))
-    out.append(f'<g clip-path="url(#tclip)"><g>{strip}<animateTransform attributeName="transform" type="translate" values="{vals}" calcMode="discrete" dur="{dur}s" repeatCount="indefinite"/></g></g>')
-# scope
+out.append('<clipPath id="tclip"><rect x="390" y="7" width="58" height="24"/></clipPath>')
+def clock(k):
+    cs = int(k * TICK * 100 + 1e-6)                     # centiseconds into the pattern
+    s, c = cs // 100, cs % 100
+    return (t(xs["s2"], TY, str(s % 10), 26, ICON, "middle", LIGHT)
+            + t(xs["cs1"], TY, str(c // 10), 18, ICON, "middle", LIGHT)
+            + t(xs["cs2"], TY, str(c % 10), 18, ICON, "middle", LIGHT))
+out.append(strip([clock(k) for k in range(TICKS)], "tclip"))
+
+# scope + level meter: a new frame every 8th note, sized by how much of the rack is playing
 out.append(f'<rect x="462" y="4" width="112" height="28" rx="3" fill="#ffffff" stroke="{BTN_EDGE}"/>')
-def scope(seed):
-    r = random.Random(seed)
-    return "M" + "L".join(f"{478 + i * 3.2:.1f} {18 + r.uniform(-1, 1) * r.choice((0.5, 1.5, 4)):.1f}" for i in range(29))
-sc = [scope(s) for s in range(5)] + [scope(0)]
-out.append(f'<rect x="466" y="8" width="7" height="20" fill="#f0f0f0"/><rect x="466" y="14" width="7" height="14" fill="#5b4a52"><animate attributeName="y" values="14;20;11;17;14" dur="{LOOP / 3:.3f}s" repeatCount="indefinite"/><animate attributeName="height" values="14;8;17;11;14" dur="{LOOP / 3:.3f}s" repeatCount="indefinite"/></rect>')
-out.append(f'<path d="{sc[0]}" fill="none" stroke="#8d8f94" stroke-width="1"><animate attributeName="d" values="{";".join(sc)}" dur="{LOOP:.3f}s" repeatCount="indefinite"/></path>')
+out.append('<clipPath id="scopeclip"><rect x="463" y="5" width="110" height="26"/></clipPath>')
+def scope_frame(k):
+    r = random.Random(k)
+    amp = 0.6 + 4.2 * MIX[k]
+    wave = "M" + "L".join(f"{478 + i * 3.2:.1f} {18 + r.uniform(-1, 1) * amp * r.choice((0.25, 0.6, 1)):.1f}" for i in range(29))
+    h = 3 + round(17 * MIX[k])
+    return (f'<rect x="466" y="8" width="7" height="20" fill="#f0f0f0"/><rect x="466" y="{28 - h}" width="7" height="{h}" fill="#5b4a52"/>'
+            f'<path d="{wave}" fill="none" stroke="#8d8f94" stroke-width="1"/>')
+out.append(strip([scope_frame(k) for k in range(TICKS)], "scopeclip"))
 # cpu / memory
 out.append(f'<rect x="580" y="4" width="124" height="28" rx="3" fill="#ffffff" stroke="{BTN_EDGE}"/>'
            f'<rect x="584" y="8" width="9" height="9" fill="#5b4a52"/>' + t(650, 15.5, "19", 6, ICON, "end", MICRO)
@@ -194,30 +236,6 @@ out.append("<defs>" + "".join(keycap_def(k) for k in "xpo.") + "</defs>")
 keycap = lambda x, y, kind: f'<use href="#{ {"x": "kx", "p": "kp", "o": "ko", ".": "kd"}[kind] }" x="{x:.1f}" y="{y}"/>'
 
 
-def envelope(notes):
-    """Selector fill over one loop: on at note start, held while the note sounds, linear release after."""
-    def v(tt):
-        best = 0.0
-        for s, ln, pk in notes:
-            for shift in (0, -LOOP_STEPS):      # tails from the previous loop
-                s2, e2 = s + shift, s + ln + shift
-                if s2 <= tt < e2:
-                    best = max(best, pk)
-                elif e2 <= tt < e2 + REL:
-                    best = max(best, pk * (1 - (tt - e2) / REL))
-        return best
-    res = 8
-    pts = [(i / res, v(i / res)) for i in range(LOOP_STEPS * res + 1)]
-    keep = [pts[0]]
-    for a, b in zip(pts[1:-1], pts[2:]):
-        p = keep[-1]
-        # drop a point that lies on the line between its neighbours
-        if abs((a[1] - p[1]) * (b[0] - p[0]) - (b[1] - p[1]) * (a[0] - p[0])) > 1e-4:
-            keep.append(a)
-    keep.append(pts[-1])
-    return keep
-
-
 grid, roll_rows = [], []
 for r, (name, kind, mixer, content) in enumerate(channels):
     y = ROW0 + r * PITCH_Y
@@ -236,15 +254,11 @@ for r, (name, kind, mixer, content) in enumerate(channels):
     out.append(f'<rect x="193" y="{y + 1.5}" width="6" height="21" rx="2" fill="#f7f7f7" stroke="{PINK if r == 0 else "#d4d4d4"}" stroke-width="{1.6 if r == 0 else 0.8}"/>')
     out.append(f'<rect class="act{r}" x="194" y="{y + 2.5}" width="4" height="19" rx="1.5" fill="{SEL_ON}"/>')
 
-    ctype, notes = content[0], []
+    ctype = content[0]
     if ctype == "steps":
         pat = content[1]
         for i in range(N_VIS):
             grid.append(keycap(SX0 + i * SPITCH, y + 3, pat[i % len(pat)]))
-        for i in range(LOOP_STEPS):
-            ch = pat[i % len(pat)]
-            if ch in "xp":
-                notes.append((i, 1, 1.0 if ch == "x" else 0.55))
     else:
         roll_rows.append(y)
         for b in range(0, N_VIS, 16):
@@ -254,26 +268,26 @@ for r, (name, kind, mixer, content) in enumerate(channels):
         if ctype == "roll":
             for s, ln, p in content[1]:
                 grid.append(bar(s, ln, p))
-                notes.append((s, ln, 1.0))
         elif ctype == "chords":
             for s, ln, ps in content[1]:
                 grid.extend(bar(s, ln, p) for p in ps)
-                notes.append((s, ln, 1.0))
         elif ctype == "pad":
             grid.append(f'<rect x="{SX0 - 2}" y="{ny(content[1]):.1f}" width="{W - SX0}" height="4" fill="{NOTE}"/>')
-            notes.append((0, LOOP_STEPS, 1.0))
-    env = envelope(notes)
-    frames = " ".join(f"{tt / LOOP_STEPS * 100:.3f}% {{ opacity: {vv:.2f} }}" for tt, vv in env)
-    css.append(f"@keyframes act{r} {{ {frames} }} .act{r} {{ animation: act{r} {LOOP:.4f}s linear infinite }}")
+    # selector level, held for each 8th note (step-end) so it changes on the shared tick
+    frames = " ".join(f"{k / TICKS * 100:.4f}% {{ opacity: {lv:.2f} }}" for k, lv in enumerate(LEVELS[r]))
+    css.append(f"@keyframes act{r} {{ {frames} 100% {{ opacity: {LEVELS[r][0]:.2f} }} }}"
+               f" .act{r} {{ animation: act{r} {LOOP:.4f}s step-end infinite }}")
 
 out.append(f'<g clip-path="url(#grid)">{"".join(grid)}</g>')
 
-# playhead: piano-roll rows only, a thin line with a pink trail behind it, ticking once per beat (every 4 steps)
+# playhead: piano-roll rows only, a thin line with a pink trail behind it, ticking every 8th note (2 steps)
 out.append('<clipPath id="rolls">' + "".join(f'<rect x="{SX0 - 2}" y="{y}" width="{W - SX0}" height="{PITCH_Y - 2}"/>' for y in roll_rows) + "</clipPath>")
 out.append(f'<g clip-path="url(#rolls)"><g class="ph"><rect x="{SX0 - 2 - 18}" y="{ROW0}" width="18" height="{len(channels) * PITCH_Y}" fill="url(#trail)"/>'
            f'<rect x="{SX0 - 2}" y="{ROW0}" width="1.3" height="{len(channels) * PITCH_Y}" fill="{PH_LINE}"/></g></g>')
 css.append(f"@keyframes ph {{ from {{ transform: translate(0px, 0px) }} to {{ transform: translate({LOOP_STEPS * SPITCH:.2f}px, 0px) }} }}"
-           f" .ph {{ animation: ph {LOOP:.4f}s steps({LOOP_STEPS // 4}) infinite }}")
+           f" .ph {{ animation: ph {LOOP:.4f}s steps({TICKS}) infinite }}")
+css.append(f"@keyframes strip {{ from {{ transform: translate(0px, 0px) }} to {{ transform: translate(0px, {-TICKS * STRIP}px) }} }}"
+           f" .strip {{ animation: strip {LOOP:.4f}s steps({TICKS}) infinite }}")
 
 # add-channel button + scrollbar, as in the real rack
 by = ROW0 + len(channels) * PITCH_Y + 6

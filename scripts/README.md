@@ -34,12 +34,15 @@ A channel name should stay under about 74px at 13px PT Sans Narrow, which is rou
 
 ## How it animates
 
-It follows FL Studio's own playback:
+It follows FL Studio's playback, with one deliberate change. Everything runs on a single 8th-note clock, 24 ticks per loop (about every 0.21s at 140 BPM), so every moving part changes on the same beat. FL itself animates smoothly.
 
 - Step rows have no playhead.
-- Piano-roll rows show a thin pink line with a soft trail. FL glides it smoothly; here it ticks once per beat (every quarter note) on purpose, for a choppy look.
-- Each channel's selector strip fills grey while the channel sounds and fades out about 0.28s after note-off.
-- The M:S:CS clock counts up in real time.
+- Piano-roll rows show a thin pink line with a soft trail. It jumps one 8th note per tick.
+- Each channel's selector strip fills grey while the channel sounds, then drops off over the next tick or two.
+- The M:S:CS clock steps with the clock and restarts with the pattern, as FL does in pattern mode.
+- The scope and level meter change frame on each tick. The meter shows how much of the rack is playing.
+
+The clock, scope and meter are drawn as "film strips": one frame per tick, slid up by a shared `.strip` animation with `steps(24)`. To change the grid, change `TICKS`.
 
 ## Fonts
 
