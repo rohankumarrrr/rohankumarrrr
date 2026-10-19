@@ -46,17 +46,17 @@ N_VIS = 41
 channels = [
     # name, kind, mixer, content
     ("rohan...Master", "master", "---", ("steps", "....xxxx....xxxx")),
+    ("cs+stats@uiuc", "light", "1", ("steps", "x...x...x...x..x")),
     ("building vinskal", "dark", "---", ("roll", [(0, 3, 6), (4, 2, 8), (8, 3, 5), (12, 2, 9), (16, 3, 6), (20, 2, 8), (24, 4, 3),
                                                    (29, 2, 9), (32, 3, 6), (36, 2, 10), (40, 4, 7), (45, 2, 5)])),
-    ("cs+stats@uiuc", "light", "1", ("steps", "x...x...x...x..x")),
     ("pinterest", "dark", "3", ("chords", [(0, 12, [2, 4, 6, 8]), (16, 12, [1, 3, 5, 9]), (32, 14, [2, 5, 7, 9])])),
     ("prev@amazon", "light", "9", ("steps", "xpxpxpxpxpxpxpxp")),
-    ("uiuc hci", "light", "---", ("steps", "....x..p....x..p")),
-    ("prev@relativity", "dark", "6", ("pad", 5)),
+    ("prev@uiuc hci", "light", "---", ("steps", "....x..p....x..p")),
+    ("prev@relativity", "light", "6", ("pad", 5)),
     ("chicago", "light", "---", ("steps", "..x...x...x...xo")),
     ("nyc", "dark", "2", ("roll", [(0, 2, 2), (3, 1, 3), (6, 2, 2), (10, 2, 5), (14, 1, 4), (16, 2, 2), (19, 1, 3), (22, 2, 2),
                                    (26, 2, 6), (30, 1, 4), (32, 2, 2), (35, 1, 3), (38, 3, 1), (42, 2, 5), (46, 1, 4)])),
-    ("rohan-is.me", "light", "7", ("chords", [(s, 2, [2, 4, 6]) for s in (3, 6, 11, 14, 19, 22, 27, 30, 35, 38, 43, 46)])),
+    ("rohan-is.me", "master", "7", ("chords", [(s, 2, [2, 4, 6]) for s in (3, 6, 11, 14, 19, 22, 27, 30, 35, 38, 43, 46)])),
 ]
 
 NARROW, LIGHT, MICRO = "ptn", "rcl", "mic"
@@ -281,5 +281,5 @@ out.append(t(W / 2 - 40, by + 12, "+", 17, "#555", "middle", extra=' font-weight
 out.append(f'<rect x="{SX0}" y="{H - 10}" width="{W - SX0 - 10}" height="5" rx="2.5" fill="#e6e6e6"/><rect x="{SX0}" y="{H - 10}" width="300" height="5" rx="2.5" fill="#cfcfcf"/>')
 
 write(OUT, svg(W, H, "".join(out),
-      "FL Studio channel rack, [rohankumar] rohan-is.me at 140 BPM. Channels: rohan...Master, building vinskal, cs+stats@uiuc, pinterest, prev@amazon, uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.",
+      "FL Studio channel rack, [rohankumar] rohan-is.me at 140 BPM. Channels: rohan...Master, cs+stats@uiuc, building vinskal, pinterest, prev@amazon, prev@uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.",
       family=NARROW, style=fonts + " " + " ".join(css)))

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.rohan-is.me">
-    <img src="assets/channel-rack.svg" width="860" alt="FL Studio channel rack for [rohankumar] rohan-is.me, playing at 140 BPM. Channels: rohan...Master, building vinskal, cs+stats@uiuc, pinterest, prev@amazon, uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.">
+    <img src="assets/channel-rack.svg" width="860" alt="FL Studio channel rack for [rohankumar] rohan-is.me, playing at 140 BPM. Channels: rohan...Master, cs+stats@uiuc, building vinskal, pinterest, prev@amazon, prev@uiuc hci, prev@relativity, chicago, nyc, rohan-is.me.">
   </a>
 </p>
 

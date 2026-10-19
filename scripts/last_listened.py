@@ -54,8 +54,9 @@ def render(track):
 
 def main():
     key = os.environ.get("LASTFM_API_KEY")
-    if not key:
-        sys.exit("LASTFM_API_KEY is not set")
+    if not key:  # skip quietly so a missing secret doesn't fail (and email about) every scheduled run
+        print("LASTFM_API_KEY is not set, README unchanged")
+        return
     user = os.environ.get("LASTFM_USER", "imaduck2025")
     try:
         track = latest_track(user, key)

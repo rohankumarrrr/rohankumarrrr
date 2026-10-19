@@ -55,7 +55,7 @@ The generator subsets each font to the characters in use and renames the subset 
 
 `last_listened.py` writes the latest last.fm track into `README.md`, between the `last-listened` comment markers. It uses the same source as the widget on rohan-is.me (`user.getrecenttracks` for `imaduck2025`). `.github/workflows/last-listened.yml` runs it every 15 minutes and commits only when the line changes. GitHub may start scheduled runs late.
 
-It needs a repository secret named `LASTFM_API_KEY`:
+It needs a repository secret named `LASTFM_API_KEY`. Without the secret, runs skip and the line stays as it is:
 
 ```sh
 gh secret set LASTFM_API_KEY --repo rohankumarrrr/rohankumarrrr
