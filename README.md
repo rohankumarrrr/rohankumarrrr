@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo). i also write sometimes: [rohan-is.me](https://www.rohan-is.me).
 
 <!-- last-listened:start -->
-currently listening to: [hello - triple j like a version](https://www.last.fm/music/daine/_/Hello+-+triple+j+Like+A+Version) by daine
+last listened to: [real friends](https://www.last.fm/music/Kanye+West/_/Real+Friends) by kanye west
 <!-- last-listened:end -->
 
 <samp>
