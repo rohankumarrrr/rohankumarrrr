@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo). i also write sometimes: [rohan-is.me](https://www.rohan-is.me).
 
 <!-- last-listened:start -->
-last listened to: [half a person - 2011 remaster](https://www.last.fm/music/The+Smiths/_/Half+a+Person+-+2011+Remaster) by the smiths
+currently listening to: [you're so great - 2012 remaster](https://www.last.fm/music/Blur/_/You%27re+so+Great+-+2012+Remaster) by blur
 <!-- last-listened:end -->
 
 <samp>
