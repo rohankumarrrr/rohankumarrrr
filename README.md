@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo). i also write sometimes: [rohan-is.me](https://www.rohan-is.me).
 
 <!-- last-listened:start -->
-currently listening to: [lovegame](https://www.last.fm/music/Lady+Gaga/_/LoveGame) by lady gaga
+last listened to: [nightcrawler \(feat. swae lee & chief keef\)](https://www.last.fm/music/Travis+Scott/_/Nightcrawler+(feat.+Swae+Lee+&+Chief+Keef)) by travis scott
 <!-- last-listened:end -->
 
 <samp>
