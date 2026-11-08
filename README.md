@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
 
 <!-- last-listened:start -->
-currently listening to: [everlong - acoustic version](https://www.last.fm/music/Foo+Fighters/_/Everlong+-+acoustic+version) by foo fighters
+currently listening to: [zero - remastered 2012](https://www.last.fm/music/The+Smashing+Pumpkins/_/Zero+-+Remastered+2012) by the smashing pumpkins
 <!-- last-listened:end -->
 
 <samp>
