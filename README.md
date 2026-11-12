@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
 
 <!-- last-listened:start -->
-last listened to: [curry slide](https://www.last.fm/music/rexv2/_/curry+slide) by rexv2
+last listened to: [don't look back in anger - remastered](https://www.last.fm/music/Oasis/_/Don%27t+Look+Back+In+Anger+-+Remastered) by oasis
 <!-- last-listened:end -->
 
 <samp>
