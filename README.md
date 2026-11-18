@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
 
 <!-- last-listened:start -->
-last listened to: [slipping into the void](https://www.last.fm/music/Weiland/_/Slipping+Into+The+Void) by weiland
+currently listening to: [heaven speaker](https://www.last.fm/music/2hollis/_/heaven+speaker) by 2hollis
 <!-- last-listened:end -->
 
 <samp>
