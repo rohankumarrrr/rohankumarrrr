@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
 
 <!-- last-listened:start -->
-currently listening to: [amphetamine](https://www.last.fm/music/Smino/_/Amphetamine) by smino
+last listened to: [thoughts from a balcony](https://www.last.fm/music/Mac+Miller/_/Thoughts+From+a+Balcony) by mac miller
 <!-- last-listened:end -->
 
 <samp>
