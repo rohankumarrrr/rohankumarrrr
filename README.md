@@ -11,7 +11,7 @@ before this: pinterest's first-party agentic harness for autonomous vulnerabilit
 statistics + cs @ uiuc in the background, with a [paper at sigcse ts 2026](https://dl.acm.org/doi/10.1145/3770761.3777297). when i'm not building, i'm probably [producing music](https://www.youtube.com/watch?v=_RL_57Qamyo).
 
 <!-- last-listened:start -->
-currently listening to: [bounce](https://www.last.fm/music/Logic/_/Bounce) by logic
+currently listening to: [fight the feeling \(feat. kendrick lamar & iman omari\)](https://www.last.fm/music/Mac+Miller/_/Fight+the+Feeling+(feat.+Kendrick+Lamar+&+Iman+Omari)) by mac miller
 <!-- last-listened:end -->
 
 <samp>
